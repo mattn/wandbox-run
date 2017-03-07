@@ -17,7 +17,7 @@ main(int argc, char* argv[]) {
     return 1;
   }
   std::stringstream ss;
-  if (argc == 3) {
+  if (std::string(argv[2]) != "-") {
     std::ifstream in(argv[2], std::ifstream::in);
     std::string line;
     std::getline(in, line);
@@ -27,8 +27,16 @@ main(int argc, char* argv[]) {
   }
 
   nlohmann::json obj;
-  obj["compiler"] = argv[1];
   obj["code"] = ss.str();
+
+  ss.str("");
+  ss.clear(std::stringstream::goodbit);
+  obj["compiler"] = argv[1];
+  for (int i = 3; i < argc; i++) {
+    if (i > 3)  ss << "\n";
+    ss << argv[i];
+  }
+  obj["runtime-option-raw"] = ss.str();
 
   ss.str("");
   ss.clear(std::stringstream::goodbit);
