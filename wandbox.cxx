@@ -21,6 +21,7 @@ main(int argc, char* argv[]) {
     std::ifstream in(argv[2], std::ifstream::in);
     std::string line;
     std::getline(in, line);
+    if (line.find("#!") != 0) ss << line + "\n";
     ss << in.rdbuf();
   } else {
     ss << std::cin.rdbuf();
