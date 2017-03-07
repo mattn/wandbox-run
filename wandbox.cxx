@@ -3,6 +3,10 @@
 #include "json.hpp"
 #include <curl/curl.h>
 
+#define reset_stream(ss) \
+  ss.str(""); \
+  ss.clear(std::stringstream::goodbit);
+
 size_t
 write_cb(char *ptr, size_t size, size_t nmemb, std::string *strm) {
   size_t len = size * nmemb;
@@ -30,8 +34,7 @@ main(int argc, char* argv[]) {
   nlohmann::json obj;
   obj["code"] = ss.str();
 
-  ss.str("");
-  ss.clear(std::stringstream::goodbit);
+  reset_stream(ss);
   obj["compiler"] = argv[1];
   for (int i = 3; i < argc; i++) {
     if (i > 3)  ss << "\n";
@@ -39,8 +42,7 @@ main(int argc, char* argv[]) {
   }
   obj["runtime-option-raw"] = ss.str();
 
-  ss.str("");
-  ss.clear(std::stringstream::goodbit);
+  reset_stream(ss);
   ss << obj;
 
   std::string chunk;
@@ -64,10 +66,10 @@ main(int argc, char* argv[]) {
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &chunk);
   ret = curl_easy_perform(curl);
   curl_easy_cleanup(curl);
+  curl_slist_free_all(headerlist);
 
   if (ret != CURLE_OK) {
-	std::cerr << "curl_easy_perform() failed" << std::endl;
-	curl_easy_strerror(ret);
+	std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(ret) << std::endl;
 	return 1;
   }
 
@@ -79,8 +81,7 @@ main(int argc, char* argv[]) {
   }
 
   int code;
-  ss.str("");
-  ss.clear(std::stringstream::goodbit);
+  reset_stream(ss);
   ss << obj["status"];
   ss >> code;
   return code;
