@@ -21,8 +21,8 @@ run(nlohmann::json& obj) {
   CURLcode ret;
   CURL *curl = curl_easy_init();
   if (curl == NULL) {
-	std::cerr << "curl_easy_init() failed" << std::endl;
-	return 1;
+    std::cerr << "curl_easy_init() failed" << std::endl;
+    return 1;
   }
   ss << obj;
   std::string data = ss.str();
@@ -42,15 +42,15 @@ run(nlohmann::json& obj) {
   curl_slist_free_all(headerlist);
 
   if (ret != CURLE_OK) {
-	std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(ret) << std::endl;
-	return 1;
+    std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(ret) << std::endl;
+    return 1;
   }
 
   obj = nlohmann::json::parse(chunk);
   try {
-	std::cout << obj["program_message"].get<std::string>();
+    std::cout << obj["program_message"].get<std::string>();
   } catch(std::exception& e) {
-	std::cerr << obj["compiler_message"].get<std::string>() << std::endl;
+    std::cerr << obj["compiler_message"].get<std::string>() << std::endl;
   }
 
   int code;
@@ -65,8 +65,8 @@ languages() {
   CURLcode ret;
   CURL *curl = curl_easy_init();
   if (curl == NULL) {
-	std::cerr << "curl_easy_init() failed" << std::endl;
-	return 1;
+    std::cerr << "curl_easy_init() failed" << std::endl;
+    return 1;
   }
 
   std::string chunk;
@@ -77,8 +77,8 @@ languages() {
   curl_easy_cleanup(curl);
 
   if (ret != CURLE_OK) {
-	std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(ret) << std::endl;
-	return 1;
+    std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(ret) << std::endl;
+    return 1;
   }
 
   nlohmann::json list = nlohmann::json::parse(chunk);
@@ -91,8 +91,8 @@ languages() {
 int
 main(int argc, char* argv[]) {
   if (argc < 3) {
-	std::cerr << "usage: " << argv[0] << " [compiler] [file] [arguments...]" << std::endl;
-	return languages();
+    std::cerr << "usage: " << argv[0] << " [compiler] [file] [arguments...]" << std::endl;
+    return languages();
   }
   std::stringstream ss;
   if (std::string(argv[2]) != "-") {
