@@ -32,7 +32,7 @@ run(nlohmann::json& obj) {
 
   std::string chunk;
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-  curl_easy_setopt(curl, CURLOPT_URL, "http://melpon.org/wandbox/api/compile.json");
+  curl_easy_setopt(curl, CURLOPT_URL, "https://wandbox.org/api/compile.json");
   curl_easy_setopt(curl, CURLOPT_POST, 1);
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
@@ -70,7 +70,7 @@ languages() {
   }
 
   std::string chunk;
-  curl_easy_setopt(curl, CURLOPT_URL, "http://melpon.org/wandbox/api/list.json");
+  curl_easy_setopt(curl, CURLOPT_URL, "https://wandbox.org/api/list.json");
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &chunk);
   ret = curl_easy_perform(curl);
@@ -99,7 +99,8 @@ main(int argc, char* argv[]) {
     std::ifstream in(argv[2], std::ifstream::in);
     std::string line;
     std::getline(in, line);
-    if (line.find("#!") != 0) ss << line + "\n";
+    if (line.find("#!") != 0 && line.find("@wandbox-run") != 0)
+      ss << line + "\n";
     ss << in.rdbuf();
   } else {
     ss << std::cin.rdbuf();
