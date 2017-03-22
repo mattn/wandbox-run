@@ -25,6 +25,16 @@ use warnings;
 warn "hello perl!";
 ```
 
+If you run wandbox-run in Windows batch file:
+
+```
+@wandbox-run clang-head %~f0 && exit /b %ERRORLEVEL%
+#include <stdio.h>
+int main() {
+  puts("foo");
+}
+```
+
 ## Requirements
 
 * [json.hpp](https://github.com/nlohmann/json)
